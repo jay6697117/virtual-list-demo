@@ -1,11 +1,7 @@
 <template>
-  <div
-    class="list-view"
-    :style="{
-      height: `${height}px`
-    }"
-    @scroll="handleScroll"
-  >
+  <div class="list-view" :style="{
+    height: `${height}px`
+  }" @scroll="handleScroll">
     <div class="list-view-phantom" :style="{ height: contentHeight }"></div>
     <div class="list-view-content" ref="listViewContent">
       <slot :visibleData="visibleData"></slot>
@@ -14,13 +10,14 @@
   </div>
 </template>
 <script>
+import { throttle } from 'lodash'
 export default {
   name: 'ListView',
   props: {
     // 数据
     data: {
       type: Array,
-      default() {
+      default () {
         return [];
       }
     },
@@ -36,21 +33,21 @@ export default {
     }
   },
   computed: {
-    contentHeight() {
+    contentHeight () {
       return this.data.length * this.itemHeight + 'px';
     }
   },
-  mounted() {
+  mounted () {
     this.updateVisibleData();
   },
-  data() {
+  data () {
     return {
       start: 0,
       visibleData: []
     };
   },
   methods: {
-    updateVisibleData(scrollTop) {
+    updateVisibleData (scrollTop) {
       console.log('updateVisibleData run');
       console.log('updateVisibleData scrollTop', scrollTop);
       scrollTop = scrollTop || 0;
@@ -73,11 +70,11 @@ export default {
       console.log(' this.$refs.listViewContent:', this.$refs.listViewContent);
       this.$refs.listViewContent.style.webkitTransform = `translate3d(0, ${start * this.itemHeight}px, 0)`; // 把可见区域的 top 设置为起始元素在整个列表中的位置（使用 transform 是为了更好的性能）
     },
-    handleScroll() {
+    handleScroll () {
       console.log('handleScroll run');
       const scrollTop = this.$el.scrollTop;
       console.log('handleScroll scrollTop', scrollTop);
-      this.updateVisibleData(scrollTop);
+      throttle(this.updateVisibleData, 200)(scrollTop);
     }
   }
 };
