@@ -58,7 +58,7 @@ export default {
       const end = start + visibleCount + (scrollTop ? 1 : 0); // 取得可见区域的结束数据索引:+5是为了防止出现空白
       this.start = start; //测试用
       console.log('this.start', this.start);
-      if (this.start >= 10000 - visibleCount) {
+      if (this.start >= 100000 - visibleCount) {
         return;
       }
       // this.visibleData = this.data.slice(start, end); // 计算出可见区域对应的数据，让 Vue.js 更新
